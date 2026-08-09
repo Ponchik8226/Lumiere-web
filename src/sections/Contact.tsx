@@ -32,19 +32,24 @@ export default function Contact() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!form.name.trim() || !form.phone.trim()) {
+      alert("Пожалуйста, заполните имя и телефон.");
+      return;
+    }
+
     const token = import.meta.env.VITE_TG_TOKEN as string;
     const chatId = "7991689715";
 
-    const text = [
-      "📋 *Новая заявка с сайта LUMIÈRE*",
+    const lines = [
+      "Новая заявка с сайта LUMIERE",
       "",
-      `👤 *Имя:* ${form.name}`,
-      `📞 *Телефон:* ${form.phone}`,
-      form.service ? `💅 *Услуга:* ${form.service}` : null,
-      form.comment ? `💬 *Комментарий:* ${form.comment}` : null,
-    ]
-      .filter(Boolean)
-      .join("\n");
+      `Имя: ${form.name}`,
+      `Телефон: ${form.phone}`,
+      form.service ? `Услуга: ${form.service}` : null,
+      form.comment ? `Комментарий: ${form.comment}` : null,
+    ].filter(Boolean) as string[];
+
+    const text = lines.join("\n");
 
     try {
       const res = await fetch(
@@ -52,11 +57,7 @@ export default function Contact() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text,
-            parse_mode: "Markdown",
-          }),
+          body: JSON.stringify({ chat_id: chatId, text }),
         }
       );
 
@@ -64,10 +65,10 @@ export default function Contact() {
         setStatus("success");
         setForm({ name: "", phone: "", service: "", comment: "" });
       } else {
-        alert("Ошибка отправки. Попробуйте позвонить нам напрямую.");
+        alert("Ошибка отправки. Позвоните нам напрямую.");
       }
     } catch {
-      alert("Ошибка соединения. Попробуйте позвонить нам напрямую.");
+      alert("Ошибка соединения. Позвоните нам напрямую.");
     }
   }
 
