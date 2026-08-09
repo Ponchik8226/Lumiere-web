@@ -96,7 +96,7 @@ export default function Services() {
 
         {/* Items — two-column on desktop */}
         <div className="grid lg:grid-cols-2 gap-x-16">
-          {category.items.map((item, i) => (
+          {category.items.map((item) => (
             <div
               key={item.name}
               className="flex items-center justify-between py-5 border-b border-stone-200 group"
