@@ -1,10 +1,10 @@
 export const salon = {
   name: "LUMIÈRE",
   tagline: "Студия красоты",
-  city: "Москва",
+  city: "Алматы",
   address: "ул. Пречистенка, 17, стр. 2",
   phone: "+7 (777) 123-45-67",
-  whatsapp: "87775151027",
+  whatsapp: "77775151027",
   instagram: "lumiere.studio",
   hours: "Пн–Сб: 10:00–21:00, Вс: 11:00–19:00",
   about: {

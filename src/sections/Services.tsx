@@ -1,13 +1,30 @@
 import { useState } from "react";
 import { salon } from "../data/salon";
 
+const categoryMeta: Record<string, { icon: string; desc: string }> = {
+  Волосы: {
+    icon: "✦",
+    desc: "Стрижки, окрашивание и восстановительные процедуры от сертифицированных колористов",
+  },
+  Ногти: {
+    icon: "◈",
+    desc: "Маникюр, педикюр и nail-арт с покрытиями, которые держатся до трёх недель",
+  },
+  Лицо: {
+    icon: "◇",
+    desc: "Аппаратная косметология и инъекционные процедуры с сертифицированными препаратами",
+  },
+};
+
 export default function Services() {
   const [active, setActive] = useState(0);
   const category = salon.services[active];
+  const meta = categoryMeta[category.category];
 
   return (
     <section id="services" className="py-24 lg:py-36 bg-[var(--color-surface)]">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
+
         {/* Heading */}
         <div className="flex items-end justify-between mb-16 flex-wrap gap-6">
           <div>
@@ -28,49 +45,92 @@ export default function Services() {
           </a>
         </div>
 
-        {/* Category tabs */}
-        <div className="flex gap-0 border-b border-stone-200 mb-10">
-          {salon.services.map((cat, i) => (
-            <button
-              key={cat.category}
-              onClick={() => setActive(i)}
-              className={`px-6 py-3 text-xs tracking-widest uppercase transition-colors duration-200 border-b-2 -mb-px ${
-                i === active
-                  ? "border-[var(--color-ink)] text-[var(--color-ink)]"
-                  : "border-transparent text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]"
-              }`}
-            >
-              {cat.category}
-            </button>
-          ))}
+        {/* Category tabs — card style */}
+        <div className="grid grid-cols-3 gap-3 mb-12">
+          {salon.services.map((cat, i) => {
+            const m = categoryMeta[cat.category];
+            const isActive = i === active;
+            return (
+              <button
+                key={cat.category}
+                onClick={() => setActive(i)}
+                className={`text-left p-5 lg:p-7 border transition-all duration-300 ${
+                  isActive
+                    ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-white"
+                    : "border-stone-200 bg-white hover:border-stone-400"
+                }`}
+              >
+                <span
+                  className={`block text-xl mb-3 ${
+                    isActive ? "text-[var(--color-brand)]" : "text-[var(--color-brand-dark)]"
+                  }`}
+                  aria-hidden="true"
+                >
+                  {m?.icon}
+                </span>
+                <span
+                  className={`block text-xs tracking-widest uppercase font-medium ${
+                    isActive ? "text-white" : "text-[var(--color-ink)]"
+                  }`}
+                >
+                  {cat.category}
+                </span>
+                <span
+                  className={`block text-xs mt-1 font-light leading-relaxed hidden lg:block ${
+                    isActive ? "text-stone-400" : "text-[var(--color-ink-soft)]"
+                  }`}
+                >
+                  {cat.items.length} процедур{cat.items.length >= 5 ? "" : "ы"}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Items */}
-        <div className="grid gap-0">
+        {/* Category description */}
+        {meta && (
+          <p className="text-sm text-[var(--color-ink-soft)] font-light mb-8 max-w-xl leading-relaxed border-l-2 border-[var(--color-brand)] pl-4">
+            {meta.desc}
+          </p>
+        )}
+
+        {/* Items — two-column on desktop */}
+        <div className="grid lg:grid-cols-2 gap-x-16">
           {category.items.map((item, i) => (
             <div
               key={item.name}
-              className={`flex items-center justify-between py-5 ${
-                i < category.items.length - 1 ? "border-b border-stone-200" : ""
-              } group`}
+              className="flex items-center justify-between py-5 border-b border-stone-200 group"
             >
               <div className="flex items-center gap-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] flex-shrink-0" aria-hidden="true" />
-                <span className="text-base lg:text-lg font-light text-[var(--color-ink)] group-hover:text-[var(--color-brand-dark)] transition-colors">
+                <span
+                  className="text-[var(--color-brand)] text-xs flex-shrink-0 transition-transform duration-200 group-hover:scale-125"
+                  aria-hidden="true"
+                >
+                  ✦
+                </span>
+                <span className="text-base font-light text-[var(--color-ink)] group-hover:text-[var(--color-brand-dark)] transition-colors">
                   {item.name}
                 </span>
               </div>
-              <span className="font-display text-lg lg:text-xl text-[var(--color-ink)] font-light flex-shrink-0 ml-8">
+              <span className="font-display text-lg text-[var(--color-ink)] font-light flex-shrink-0 ml-6">
                 {item.price}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Footnote */}
-        <p className="mt-8 text-xs text-[var(--color-ink-soft)] font-light">
-          * Окончательная стоимость уточняется на консультации. Цены указаны без стоимости материалов.
-        </p>
+        {/* Bottom row */}
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+          <p className="text-xs text-[var(--color-ink-soft)] font-light">
+            * Окончательная стоимость уточняется на консультации
+          </p>
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 bg-[var(--color-ink)] text-white text-xs tracking-widest uppercase px-6 py-3 hover:bg-[var(--color-brand-dark)] transition-colors duration-300"
+          >
+            Записаться <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </div>
     </section>
   );
